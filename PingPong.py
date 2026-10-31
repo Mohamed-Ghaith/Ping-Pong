@@ -51,12 +51,17 @@ clock = time.Clock()
 fps = 60
 finish = False
 
+speed_x = 5
+speed_y = 5
 
+
+name1 = input('Enter player 1 name:')
+name2 = input('Enter Player 2 name')
 
 font.init()
 font = font.Font(None, 70)
-win = font.render('You won!', True, (255, 215, 0))
-lose = font.render('You lost!', True, (255, 215, 0))
+win1 = font.render( name1+' won!', True, (255, 215, 0))
+win2 = font.render(name2+' won!', True, (255, 215, 0))
 while game:
     for e in event.get():
         if e.type == QUIT:
@@ -69,6 +74,26 @@ while game:
         ball.reset()
         player2.control_player2()
         player1.control_player1()
+
+
+        ball.rect.x += speed_x
+        ball.rect.y += speed_y
+
+        if sprite.collide_rect(ball, player1) or sprite.collide_rect(ball, player2):
+            speed_x*= -1
+
+
+        if ball.rect.y < 0 or ball.rect.y > wh - ball.rect.height:
+            speed_y*= -1
+
+        
+        if ball.rect.x < player1.rect.x - ball.rect.width:
+            finish = True
+            window.blit(win2,(200, 200))
+
+        if ball.rect.x > player2.rect.x + ball.rect.width:
+            finish = True
+            window.blit(win1, (200, 200))
 
     display.update()
     clock.tick(fps)
